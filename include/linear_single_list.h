@@ -23,6 +23,10 @@ public:
     void printList() const;       // функция для вывода списка
     bool search(int value) const; // функция для поиска элемента
     int size() const;             // функция для получения размера списка
+    bool addBefore(int newVal, int beforVal);
+    bool addAfter(int newVal, int afterVal);
+    bool addAtPosition(int newVal, int position);
+    bool isEmpty() const;
     // ………………………………………………………………..
 private:
     Node *head; // голова списка
@@ -148,13 +152,90 @@ bool LinearSingleList::search(int value) const // функция для поис
 
 int LinearSingleList::size() const { return count; }
 
-int main()
+// Добавление элемента перед элементом с заданным значением
+// Добавление элемента перед элементом с заданным значением
+bool LinearSingleList::addBefore(int newValue, int beforeValue)
 {
-    LinearSingleList myList;
-    for (int i = 0; i < 7; i++)
-    {
-        myList.addLast(i);
+    if (head == nullptr) // если список пуст
+        return false;
+
+    if (head->info == beforeValue)
+    { // если искомый элемент первый
+        addFirst(newValue);
+        return true;
     }
-    // ……………………………………………..
-    return 0;
+
+    Node *current = head;
+    while (current->next != nullptr)
+    {
+        if (current->next->info == beforeValue)
+        {
+            Node *newNode = new Node(newValue);
+            newNode->next = current->next;
+            current->next = newNode;
+            count++;
+            return true;
+        }
+        current = current->next;
+    }
+    return false; // элемент не найден
+}
+
+// Добавление элемента после элемента с заданным значением
+bool LinearSingleList::addAfter(int newValue, int afterValue)
+{
+    Node *current = head;
+    while (current != nullptr)
+    {
+        if (current->info == afterValue)
+        {
+            Node *newNode = new Node(newValue);
+            newNode->next = current->next;
+            current->next = newNode;
+            if (current == tail)
+            {
+                tail = newNode;
+            }
+            count++;
+            return true;
+        }
+        current = current->next;
+    }
+    return false; // элемент не найден
+}
+
+// Добавление элемента по номеру (позиции)
+bool LinearSingleList::addAtPosition(int newValue, int position)
+{
+    if (position < 0 || position > count)
+        return false;
+
+    if (position == 0)
+    {
+        addFirst(newValue);
+        return true;
+    }
+
+    if (position == count)
+    {
+        addLast(newValue);
+        return true;
+    }
+
+    Node *current = head;
+    for (int i = 0; i < position - 1; i++)
+    {
+        current = current->next;
+    }
+
+    Node *newNode = new Node(newValue);
+    newNode->next = current->next;
+    current->next = newNode;
+    count++;
+    return true;
+}
+
+bool LinearSingleList::isEmpty() const // метод для проверки пустоты списка
+{
+    return head == nullptr; // возвращает true, если список пуст
 }
