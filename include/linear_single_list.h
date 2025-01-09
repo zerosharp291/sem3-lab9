@@ -18,17 +18,25 @@ public:
     LinearSingleList();
     ~LinearSingleList();
     void addFirst(int x);
+    void addLast(int x);
     bool delNode(int valueToDelete);
+    void printList() const;       // функция для вывода списка
+    bool search(int value) const; // функция для поиска элемента
+    int size() const;             // функция для получения размера списка
     // ………………………………………………………………..
 private:
     Node *head; // голова списка
     Node *tail; // хвост списка
+    int count;
 };
+
 LinearSingleList::LinearSingleList()
 {
     head = nullptr;
     tail = nullptr;
+    count = 0;
 }
+
 LinearSingleList::~LinearSingleList()
 {
     Node *tmp = nullptr;
@@ -41,6 +49,7 @@ LinearSingleList::~LinearSingleList()
     tail = nullptr;
     cout << "Список удален";
 }
+
 void LinearSingleList::addFirst(int x)
 {
     Node *tmp = new Node(x);
@@ -50,7 +59,25 @@ void LinearSingleList::addFirst(int x)
         tail = tmp;
     }
     head = tmp;
+    count++;
 }
+
+void LinearSingleList::addLast(int x)
+{
+    Node *tmp = new Node(x); // создаем новый узел
+    if (head == nullptr)     // если список пуст
+    {
+        head = tmp; // новый узел становится головой
+        tail = tmp; // новый узел становится хвостом
+    }
+    else // если список не пуст
+    {
+        tail->next = tmp; // добавляем новый узел в конец списка
+        tail = tmp;       // обновляем хвост
+    }
+    count++; // увеличиваем счетчик
+}
+
 bool LinearSingleList::delNode(int valueToDelete) // удаление заданного узла
 {
     Node *p; // указатель на удаляемое из списка звено
@@ -89,11 +116,38 @@ bool LinearSingleList::delNode(int valueToDelete) // удаление задан
                 if (p == tail)
                     tail = p1;
                 delete p;
+                count--;
             }
         }
     }
     return found;
 }
+
+void LinearSingleList::printList() const // функция для вывода списка
+{
+    Node *current = head;
+    while (current != nullptr)
+    {
+        cout << current->info << " ";
+        current = current->next;
+    }
+    cout << endl;
+}
+
+bool LinearSingleList::search(int value) const // функция для поиска элемента
+{
+    Node *current = head;
+    while (current != nullptr)
+    {
+        if (current->info == value)
+            return true; // элемент найден
+        current = current->next;
+    }
+    return false; // элемент не найден
+}
+
+int LinearSingleList::size() const { return count; }
+
 int main()
 {
     LinearSingleList myList;
